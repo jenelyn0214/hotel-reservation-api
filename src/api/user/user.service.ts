@@ -3,16 +3,10 @@ import { ConfigType } from '@nestjs/config';
 import { Model, model } from 'mongoose';
 
 import cConfig from '@src/config/common.config';
-import emailConfig from '@src/config/emailjs.config';
 import { DatabaseService } from '@src/database/database.service';
-import { UserIDEnum, UserIDTypeEnum } from '@src/enums';
-import { IConfimationEmailParams, IUser } from '@src/interfaces';
 import { IUserDoc, UserSchema } from '@src/schema/user.schema';
-import { generateUserID } from '@src/util/id-generator';
 import { encryptPassword } from '@src/util/password';
-import { sendEmail } from '@src/util/send-email';
 
-import { UserIDRequestDTO } from '../user-id-request/user-id-request.dto';
 import {
   CreateUserDTO,
   FilterUserDTO,
@@ -27,8 +21,6 @@ export class UserService {
   constructor(
     @Inject(cConfig.KEY)
     private readonly commonConfig: ConfigType<typeof cConfig>,
-    @Inject(emailConfig.KEY)
-    private readonly emailJsConfig: ConfigType<typeof emailConfig>,
     private readonly dbService: DatabaseService,
   ) {
     this.serviceModel =
@@ -36,59 +28,6 @@ export class UserService {
   }
 
   async create(createUserDTO: CreateUserDTO): Promise<UserDTO> {
-    const iblNumber = await generateUserID(
-      UserIDEnum.iBL,
-      await this.getLastID(UserIDEnum.iBL),
-    );
-
-    const iRNumber =
-      createUserDTO.type == UserIDTypeEnum.iRENT
-        ? await generateUserID(
-            UserIDEnum.iRENT,
-            await this.getLastID(UserIDEnum.iRENT),
-          )
-        : null;
-
-    const iSNumber =
-      createUserDTO.type == UserIDTypeEnum.iSERVE
-        ? await generateUserID(
-            UserIDEnum.iSERVE,
-            await this.getLastID(UserIDEnum.iSERVE),
-          )
-        : null;
-
-    const iMNumber =
-      createUserDTO.type == UserIDTypeEnum.iMANAGE
-        ? await generateUserID(
-            UserIDEnum.iMANAGE,
-            await this.getLastID(UserIDEnum.iMANAGE),
-          )
-        : null;
-
-    const iMRNumber =
-      createUserDTO.type == UserIDTypeEnum.iMANAGER
-        ? await generateUserID(
-            UserIDEnum.iMANAGER,
-            await this.getLastID(UserIDEnum.iMANAGER),
-          )
-        : null;
-
-    const iENumber =
-      createUserDTO.type == UserIDTypeEnum.iEMPLOYEE
-        ? await generateUserID(
-            UserIDEnum.iEMPLOYEE,
-            await this.getLastID(UserIDEnum.iEMPLOYEE),
-          )
-        : null;
-
-    const iPNumber =
-      createUserDTO.type == UserIDTypeEnum.iPARTNER
-        ? await generateUserID(
-            UserIDEnum.iPARTNER,
-            await this.getLastID(UserIDEnum.iPARTNER),
-          )
-        : null;
-
     const password = encryptPassword(createUserDTO.password);
 
     const fullName =
@@ -99,29 +38,9 @@ export class UserService {
 
     const user = await this.serviceModel.create({
       ...createUserDTO,
-      iblNumber,
-      iRNumber,
-      iSNumber,
-      iMNumber,
-      iMRNumber,
-      iENumber,
-      iPNumber,
       password,
       fullName,
-      confirmed: false,
     });
-
-    const emailParams: IConfimationEmailParams = {
-      toEmail: user.email,
-      toName: user.firstName,
-      link: `${this.commonConfig.app.client}/confirmation/${user.id}`,
-    };
-
-    await sendEmail(
-      this.emailJsConfig,
-      this.emailJsConfig.confirmationTemplateId,
-      emailParams,
-    );
 
     return user.toJSON() as UserDTO;
   }
@@ -218,145 +137,4 @@ export class UserService {
 
     return result;
   }
-
-  getLastID = async (type: UserIDEnum): Promise<string | null> => {
-    const user: UserDTO = await this.serviceModel
-      .findOne({ [type]: { $ne: null } })
-      .sort({
-        [type]: -1,
-      })
-      .lean()
-      .exec();
-
-    return (user && user[type]) ?? null;
-  };
-
-  generateUserTypeAccount = async (id: string, userType: UserIDTypeEnum) => {
-    const user: UserDTO = await this.findOne(id);
-
-    const iRNumber =
-      userType == UserIDTypeEnum.iRENT
-        ? await generateUserID(
-            UserIDEnum.iRENT,
-            await this.getLastID(UserIDEnum.iRENT),
-          )
-        : user.iRNumber;
-
-    const iSNumber =
-      userType == UserIDTypeEnum.iSERVE
-        ? await generateUserID(
-            UserIDEnum.iSERVE,
-            await this.getLastID(UserIDEnum.iSERVE),
-          )
-        : user.iSNumber;
-
-    const iMNumber =
-      userType == UserIDTypeEnum.iMANAGE
-        ? await generateUserID(
-            UserIDEnum.iMANAGE,
-            await this.getLastID(UserIDEnum.iMANAGE),
-          )
-        : user.iMNumber;
-
-    const toBeUpdated = {
-      updated: Date.now(),
-      additionalType: userType,
-      iRNumber,
-      iSNumber,
-      iMNumber,
-    };
-
-    await this.serviceModel.updateOne({ _id: id }, toBeUpdated).exec();
-  };
-
-  async createForSeed(createUserDTO: CreateUserDTO): Promise<UserDTO> {
-    const iblNumber = await generateUserID(
-      UserIDEnum.iBL,
-      await this.getLastID(UserIDEnum.iBL),
-    );
-
-    const iRNumber =
-      createUserDTO.type == UserIDTypeEnum.iRENT
-        ? await generateUserID(
-            UserIDEnum.iRENT,
-            await this.getLastID(UserIDEnum.iRENT),
-          )
-        : null;
-
-    const iSNumber =
-      createUserDTO.type == UserIDTypeEnum.iSERVE
-        ? await generateUserID(
-            UserIDEnum.iSERVE,
-            await this.getLastID(UserIDEnum.iSERVE),
-          )
-        : null;
-
-    const iMNumber =
-      createUserDTO.type == UserIDTypeEnum.iMANAGE
-        ? await generateUserID(
-            UserIDEnum.iMANAGE,
-            await this.getLastID(UserIDEnum.iMANAGE),
-          )
-        : null;
-
-    const iMRNumber =
-      createUserDTO.type == UserIDTypeEnum.iMANAGER
-        ? await generateUserID(
-            UserIDEnum.iMANAGER,
-            await this.getLastID(UserIDEnum.iMANAGER),
-          )
-        : null;
-
-    const iENumber =
-      createUserDTO.type == UserIDTypeEnum.iEMPLOYEE
-        ? await generateUserID(
-            UserIDEnum.iEMPLOYEE,
-            await this.getLastID(UserIDEnum.iEMPLOYEE),
-          )
-        : null;
-
-    const iPNumber =
-      createUserDTO.type == UserIDTypeEnum.iPARTNER
-        ? await generateUserID(
-            UserIDEnum.iPARTNER,
-            await this.getLastID(UserIDEnum.iPARTNER),
-          )
-        : null;
-
-    const password = encryptPassword(createUserDTO.password);
-
-    const fullName =
-      createUserDTO.firstName +
-      ' ' +
-      (createUserDTO.middleName ? createUserDTO.middleName[0] + '. ' : '') +
-      createUserDTO.lastName;
-
-    const user = await this.serviceModel.create({
-      ...createUserDTO,
-      iblNumber,
-      iRNumber,
-      iSNumber,
-      iMNumber,
-      iMRNumber,
-      iENumber,
-      iPNumber,
-      password,
-      fullName,
-    });
-
-    return user.toJSON() as UserDTO;
-  }
-
-  updateIdInformation = async (idRequest: UserIDRequestDTO) => {
-    const { IDPath, validIDNo, dateIssued, placeIssued } = idRequest;
-
-    const idFormData: Partial<IUser> = {
-      validIDNo,
-      dateIssued,
-      placeIssued,
-      IDPath,
-    };
-
-    await this.update(idRequest.userId, idFormData);
-  };
 }

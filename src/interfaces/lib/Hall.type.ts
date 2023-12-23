@@ -1,12 +1,12 @@
-import { RoomStatusEnum } from '@src/enums';
+import { HallStatusEnum } from '@src/enums';
 
 export interface IHall {
   id?: any;
   name: string;
   description: string;
-  amount: number;
+  price: number;
   maxPax: number;
-  status: RoomStatusEnum;
+  status: HallStatusEnum;
   created?: Date;
   updated?: Date | null;
   deleted?: Date | null;

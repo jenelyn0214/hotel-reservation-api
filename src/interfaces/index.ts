@@ -11,3 +11,5 @@ export * from './lib/RoomBooking.type';
 export * from './lib/RoomType.type';
 export * from './lib/Service.type';
 export * from './lib/User.type';
+
+export * from './lib/JWT.type';

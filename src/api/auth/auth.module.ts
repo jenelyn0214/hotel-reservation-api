@@ -4,7 +4,6 @@ import { JwtModule } from '@nestjs/jwt';
 
 import { UserModule } from '@src/api/user/user.module';
 import commonConfig from '@src/config/common.config';
-import emailConfig from '@src/config/emailjs.config';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -14,7 +13,6 @@ import { AtStrategy, RtStrategy } from './strategies';
   imports: [
     JwtModule.register({}),
     ConfigModule.forFeature(commonConfig),
-    ConfigModule.forFeature(emailConfig),
     UserModule,
   ],
   controllers: [AuthController],

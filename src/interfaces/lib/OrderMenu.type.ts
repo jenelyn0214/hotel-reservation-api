@@ -4,9 +4,9 @@ import { IOrder } from './Order.type';
 export interface IOrderMenu {
   id?: any;
   orderId: string;
-  order: IOrder;
+  order?: IOrder;
   menuId: string;
-  menu: IMenu;
+  menu?: IMenu;
   qty: number;
   created?: Date;
   updated?: Date | null;

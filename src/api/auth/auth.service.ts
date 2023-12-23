@@ -5,10 +5,9 @@ import { JwtService } from '@nestjs/jwt';
 import { UserDTO } from '@src/api/user/user.dto';
 import { UserService } from '@src/api/user/user.service';
 import cConfig from '@src/config/common.config';
-import emailConfig from '@src/config/emailjs.config';
-import { IConfimationEmailParams, IJwtPayload, ITokens } from '@src/interfaces';
+import { IJwtPayload, ITokens } from '@src/interfaces';
 import { comparePassword } from '@src/util/password';
-import { sendEmail } from '@src/util/send-email';
+// import { sendEmail } from '@src/util/send-email';
 
 import {
   AuthConfirmDTO,
@@ -25,15 +24,12 @@ export class AuthService {
     private jwtService: JwtService,
     @Inject(cConfig.KEY)
     private readonly commonConfig: ConfigType<typeof cConfig>,
-    @Inject(emailConfig.KEY)
-    private readonly emailJsConfig: ConfigType<typeof emailConfig>,
     private readonly userService: UserService,
   ) {}
 
   async login(authDTO: AuthDTO): Promise<AuthResponseDTO> {
     const users = await this.userService.findByFilter({
       email: authDTO.email,
-      confirmed: true,
     });
 
     if (users.length === 0) throw new ForbiddenException('Access Denied');
@@ -114,24 +110,9 @@ export class AuthService {
   async forgotPassword(authForgotPasswordDTO: AuthForgotPasswordDTO) {
     const users = await this.userService.findByFilter({
       email: authForgotPasswordDTO.email,
-      confirmed: true,
     });
 
     if (!users) throw new ForbiddenException("Email doesn't exist!");
-
-    const user: UserDTO = users[0];
-
-    const emailParams: IConfimationEmailParams = {
-      toEmail: user.email,
-      toName: user.firstName,
-      link: `${this.commonConfig.app.client}/reset-password/${user.id}`,
-    };
-
-    await sendEmail(
-      this.emailJsConfig,
-      this.emailJsConfig.forgotPasswordTemplateId,
-      emailParams,
-    );
 
     return true;
   }
@@ -142,7 +123,7 @@ export class AuthService {
     if (!user) throw new ForbiddenException('Access Denied');
 
     await this.userService.update(user.id, {
-      confirmed: true,
+      // confirmed: true,
     });
 
     return true;

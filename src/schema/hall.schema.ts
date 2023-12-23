@@ -8,7 +8,7 @@ interface IHallDoc extends IHall, Document {}
 const HallSchemaFields: Record<keyof Omit<IHall, 'id'>, any> = {
   name: String,
   description: String,
-  amount: Number,
+  price: Number,
   maxPax: Number,
   status: String,
   created: {

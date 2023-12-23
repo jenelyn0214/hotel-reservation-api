@@ -5,13 +5,11 @@ import { toJSONCallback } from '@src/util/schema';
 
 interface IRoomDoc extends IRoom, Document {}
 
-const RoomSchemaFields: Record<
-  keyof Omit<IRoom, 'id' | 'roomType' | 'roomBooking'>,
-  any
-> = {
+const RoomSchemaFields: Record<keyof Omit<IRoom, 'id' | 'roomType'>, any> = {
   number: String,
   roomTypeId: { type: Schema.Types.ObjectId, ref: 'RoomType' },
-  roomBookingId: { type: Schema.Types.ObjectId, ref: 'RoomBooking' },
+  price: Number,
+  maxPax: Number,
   status: String,
   created: {
     type: Date,
@@ -36,17 +34,10 @@ RoomSchema.virtual('roomType', {
   justOne: true,
 });
 
-RoomSchema.virtual('roomBooking', {
-  ref: 'RoomBooking',
-  localField: 'roomBookingId',
-  foreignField: '_id',
-  justOne: true,
-});
-
 RoomSchema.pre(/^find/, function () {
-  this.populate(['roomType', 'roomBooking']);
+  this.populate(['roomType']);
 });
 
 RoomSchema.set('toJSON', toJSONCallback);
 
-export { RoomSchema, IRoomDoc };
+export { IRoomDoc, RoomSchema };

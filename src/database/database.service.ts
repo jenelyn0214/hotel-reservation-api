@@ -21,6 +21,7 @@ export class DatabaseService {
   }
 
   async connect() {
+    mongoose.set('strictQuery', true);
     await mongoose
       .connect(this.databaseConfig.databaseURI)
       .catch((err) => {

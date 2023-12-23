@@ -6,7 +6,7 @@ import { toJSONCallback } from '@src/util/schema';
 interface IOrderDoc extends IOrder, Document {}
 
 const OrderSchemaFields: Record<
-  keyof Omit<IOrder, 'id' | 'roomBooking' | 'room'>,
+  keyof Omit<IOrder, 'id' | 'roomBooking' | 'room' | 'queue'>,
   any
 > = {
   paxCount: Number,
@@ -18,6 +18,7 @@ const OrderSchemaFields: Record<
   paymentType: String,
   roomBookingId: { type: Schema.Types.ObjectId, ref: 'RoomBooking' },
   roomId: { type: Schema.Types.ObjectId, ref: 'Room' },
+  queueId: { type: Schema.Types.ObjectId, ref: 'Queue' },
   status: String,
   created: {
     type: Date,
@@ -55,4 +56,4 @@ OrderSchema.pre(/^find/, function () {
 
 OrderSchema.set('toJSON', toJSONCallback);
 
-export { OrderSchema, IOrderDoc };
+export { IOrderDoc, OrderSchema };

@@ -21,6 +21,13 @@ export enum RoomStatusEnum {
   OCCUPIED = 'occupied',
 }
 
+export enum HallStatusEnum {
+  AVAILABLE = 'available',
+  UNAVAILABLE = 'unavailable',
+  BOOKED = 'booked',
+  OCCUPIED = 'occupied',
+}
+
 export enum BookingStatusEnum {
   BOOKED = 'booked',
   IN_PROGRESS = 'in_progress',

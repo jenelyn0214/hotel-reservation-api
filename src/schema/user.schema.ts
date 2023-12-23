@@ -26,6 +26,10 @@ const UserSchemaFields: Record<keyof Omit<IUser, 'id'>, any> = {
   },
   password: String,
   type: String,
+  refreshToken: {
+    type: String,
+    default: null,
+  },
   created: {
     type: Date,
     default: Date.now,

@@ -6,9 +6,9 @@ import { IHall } from './Hall.type';
 export interface IHallBooking {
   id?: any;
   customerId: string;
-  customer: ICustomer;
+  customer?: ICustomer;
   hallId: string;
-  hall: IHall;
+  hall?: IHall;
   startDate: Date;
   endDate: Date;
   paxCount: number;

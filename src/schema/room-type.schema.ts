@@ -8,6 +8,7 @@ interface IRoomTypeDoc extends IRoomType, Document {}
 const RoomTypeSchemaFields: Record<keyof Omit<IRoomType, 'id'>, any> = {
   name: String,
   price: Number,
+  maxPax: Number,
   created: {
     type: Date,
     default: Date.now,
@@ -26,4 +27,4 @@ const RoomTypeSchema = new Schema(RoomTypeSchemaFields);
 
 RoomTypeSchema.set('toJSON', toJSONCallback);
 
-export { RoomTypeSchema, IRoomTypeDoc };
+export { IRoomTypeDoc, RoomTypeSchema };

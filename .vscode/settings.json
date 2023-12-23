@@ -1,7 +1,9 @@
 {
-  "eslint.validate": ["typescript"],
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+    "source.organizeImports": "explicit"
   },
   "files.eol": "\n"
 }

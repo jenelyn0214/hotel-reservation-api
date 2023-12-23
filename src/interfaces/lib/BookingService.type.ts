@@ -4,9 +4,9 @@ import { IService } from './Service.type';
 export interface IBookingService {
   id?: any;
   roomBookingId: string;
-  roomBooking: IRoomBooking;
+  roomBooking?: IRoomBooking;
   serviceId: string;
-  service: IService;
+  service?: IService;
   qty: number;
   price: number;
   created?: Date;

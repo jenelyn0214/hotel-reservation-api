@@ -6,9 +6,9 @@ import { IRoom } from './Room.type';
 export interface IRoomBooking {
   id?: any;
   customerId: string;
-  customer: ICustomer;
+  customer?: ICustomer;
   roomId: string;
-  room: IRoom;
+  room?: IRoom;
   startDate: Date;
   endDate: Date;
   paxCount: number;

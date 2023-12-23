@@ -10,6 +10,7 @@ export interface IUser {
   username: string;
   password: string;
   type: UserTypeEnum;
+  refreshToken?: string;
   created?: Date;
   updated?: Date | null;
   deleted?: Date | null;
