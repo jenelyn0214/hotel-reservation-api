@@ -52,7 +52,7 @@ async function bootstrap() {
             exposedHeaders: ['accesstoken', 'content-disposition'],
         };
     }
-    else {
+    if (config.enableSwagger) {
         const openAPIOptions = new swagger_1.DocumentBuilder()
             .setTitle(process.env.API_TITLE)
             .setDescription(process.env.API_DESCRIPTION)

@@ -33,7 +33,9 @@ async function bootstrap() {
       exposedHeaders: ['accesstoken', 'content-disposition'],
       // origin: config.accessControlOriginUrls,
     };
-  } else {
+  }
+
+  if (config.enableSwagger) {
     const openAPIOptions = new DocumentBuilder()
       .setTitle(process.env.API_TITLE)
       .setDescription(process.env.API_DESCRIPTION)

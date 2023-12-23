@@ -4,6 +4,7 @@ const config_1 = require("@nestjs/config");
 exports.default = (0, config_1.registerAs)('common', () => ({
     port: parseInt(process.env.PORT, 10) || 3333,
     isProduction: process.env.ENVIRONMENT === 'production' || false,
+    enableSwagger: process.env.ENABLE_SWAGGER === 'true' || false,
     apiKey: process.env.API_KEY || '',
     secured: process.env.SECURED || 'false',
     jwt: {

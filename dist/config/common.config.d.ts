@@ -1,6 +1,7 @@
 declare const _default: (() => {
     port: number;
     isProduction: boolean;
+    enableSwagger: boolean;
     apiKey: string;
     secured: string;
     jwt: {
@@ -10,6 +11,7 @@ declare const _default: (() => {
 }) & import("@nestjs/config").ConfigFactoryKeyHost<{
     port: number;
     isProduction: boolean;
+    enableSwagger: boolean;
     apiKey: string;
     secured: string;
     jwt: {
