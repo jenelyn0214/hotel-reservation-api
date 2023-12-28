@@ -1,4 +1,4 @@
-import { ServiceTypeEnum } from '@src/enums/lib/Service.enum';
+import { ServiceTypeEnum } from '@src/enums';
 export interface IService {
     id?: any;
     name: string;

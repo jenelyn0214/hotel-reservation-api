@@ -1,6 +1,9 @@
+import { join } from 'path';
+
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 import { AuthModule } from '@src/api/auth/auth.module';
 import { AtGuard } from '@src/common/guards';
@@ -26,6 +29,10 @@ import { UserModule } from './api/user/user.module';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'swagger-static'),
+      serveRoot: process.env.ENVIRONMENT === 'development' ? '/' : '/api-docs',
+    }),
     ConfigModule.forRoot(),
     ConfigModule.forFeature(commonConfig),
     DatabaseModule,

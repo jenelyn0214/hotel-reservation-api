@@ -10,9 +10,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
+const path_1 = require("path");
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const core_1 = require("@nestjs/core");
+const serve_static_1 = require("@nestjs/serve-static");
 const auth_module_1 = require("./api/auth/auth.module");
 const guards_1 = require("./common/guards");
 const common_config_1 = __importDefault(require("./config/common.config"));
@@ -35,6 +37,10 @@ let AppModule = class AppModule {
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: (0, path_1.join)(__dirname, '..', 'swagger-static'),
+                serveRoot: process.env.ENVIRONMENT === 'development' ? '/' : '/api-docs',
+            }),
             config_1.ConfigModule.forRoot(),
             config_1.ConfigModule.forFeature(common_config_1.default),
             database_module_1.DatabaseModule,
