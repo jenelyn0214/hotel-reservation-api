@@ -4,7 +4,7 @@ import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
 import cConfig from '@src/config/common.config';
-import { validateAPIHash } from '@src/util/api-hasher';
+// import { validateAPIHash } from '@src/util/api-hasher';
 
 export const blackList = [];
 
@@ -19,44 +19,45 @@ export class AtGuard extends AuthGuard('jwt') {
   }
 
   canActivate(context: ExecutionContext) {
-    const isPublic = this.reflector.getAllAndOverride('isPublic', [
-      context.getHandler(),
-      context.getClass(),
-    ]);
+    return true;
+    // const isPublic = this.reflector.getAllAndOverride('isPublic', [
+    //   context.getHandler(),
+    //   context.getClass(),
+    // ]);
 
-    const request = context.switchToHttp().getRequest();
+    // const request = context.switchToHttp().getRequest();
 
-    const apiKey = request?.headers['x-api-key'];
-    const apiHash = request?.headers['x-api-hash'];
+    // const apiKey = request?.headers['x-api-key'];
+    // const apiHash = request?.headers['x-api-hash'];
 
-    const checkApiKey = validateAPIHash(
-      {
-        apiKey: this.commonConfig.apiKey,
-        data: request?.body || {},
-        params: request?.query || {},
-      },
-      apiHash,
-    );
+    // const checkApiKey = validateAPIHash(
+    //   {
+    //     apiKey: this.commonConfig.apiKey,
+    //     data: request?.body || {},
+    //     params: request?.query || {},
+    //   },
+    //   apiHash,
+    // );
 
-    if (!apiKey) return false;
-    if (apiKey !== this.commonConfig.apiKey) return false;
-    if (this.commonConfig.secured === 'true') {
-      if (!checkApiKey) return false;
-    }
+    // if (!apiKey) return false;
+    // if (apiKey !== this.commonConfig.apiKey) return false;
+    // if (this.commonConfig.secured === 'true') {
+    //   if (!checkApiKey) return false;
+    // }
 
-    if (isPublic) return true;
+    // if (isPublic) return true;
 
-    const accessToken = request?.headers?.authorization?.replace('Bearer ', '');
+    // const accessToken = request?.headers?.authorization?.replace('Bearer ', '');
 
-    if (blackList.includes(accessToken)) {
-      console.log('blocked - ', accessToken);
-      return false;
-    }
+    // if (blackList.includes(accessToken)) {
+    //   console.log('blocked - ', accessToken);
+    //   return false;
+    // }
 
-    if (request.route.path.includes('auth/logout')) {
-      blackList.push(accessToken);
-    }
+    // if (request.route.path.includes('auth/logout')) {
+    //   blackList.push(accessToken);
+    // }
 
-    return super.canActivate(context);
+    // return super.canActivate(context);
   }
 }
