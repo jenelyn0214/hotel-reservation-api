@@ -46,16 +46,16 @@ export class AtGuard extends AuthGuard('jwt') {
 
     if (isPublic) return true;
 
-    const accessToken = request?.headers?.authorization?.replace('Bearer ', '');
+    // const accessToken = request?.headers?.authorization?.replace('Bearer ', '');
 
-    if (blackList.includes(accessToken)) {
-      console.log('blocked - ', accessToken);
-      return false;
-    }
+    // if (blackList.includes(accessToken)) {
+    //   console.log('blocked - ', accessToken);
+    //   return false;
+    // }
 
-    if (request.route.path.includes('auth/logout')) {
-      blackList.push(accessToken);
-    }
+    // if (request.route.path.includes('auth/logout')) {
+    //   blackList.push(accessToken);
+    // }
 
     return super.canActivate(context);
   }
